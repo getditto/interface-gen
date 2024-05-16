@@ -1,0 +1,7 @@
+{
+    "name": "Example sanity check object",
+    "count": 100,
+    "realnum": 123.0,
+    "cities": ["Paris", "Berlin", "Dayton, NV"]
+}
+

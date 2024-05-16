@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package v0.1-example;
+
+message TripStart {
+  string name = 1;
+  string timestamp = 2;
+  string trip_id = 3;
+  int32 num_travellers = 4;
+  GeomTypeEnum GeomType = 5;
+  repeated array coordinates = 6;
+  enum GeomTypeEnum {
+    Point = 0;
+    Polygon = 1;
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type" : "enum",
+  "name" : "GeomType",
+  "namespace" : "v0.1-example",
+  "symbols" : [ "Point", "Polygon" ],
+  "default" : "Point"
+}

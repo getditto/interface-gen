@@ -1,0 +1,42 @@
+{
+  "type" : "record",
+  "name" : "TripStart",
+  "namespace" : "v0.1-example",
+  "doc" : "Trip start message.",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "'trip_start'"
+  }, {
+    "name" : "timestamp",
+    "type" : "string",
+    "doc" : "Timestamp in ISO 8601 format, UTC"
+  }, {
+    "name" : "trip_id",
+    "type" : "string",
+    "doc" : "Trip ID, .e.g '06.1.2024'."
+  }, {
+    "name" : "num_travellers",
+    "type" : "int",
+    "doc" : "Number of travellers"
+  }, {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "GeomType",
+      "symbols" : [ "Point", "Polygon" ],
+      "default" : "Point"
+    },
+    "doc" : "Location where you started. geoJSON geometry type. Typically a\n*  Point but could also be a Polygon."
+  }, {
+    "name" : "coordinates",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "array",
+        "items" : "double"
+      }
+    },
+    "doc" : "geoJSON geometry coordinates, 1 element for Point, at least 4\n* points for Polygon."
+  } ]
+}

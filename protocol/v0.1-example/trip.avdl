@@ -1,0 +1,53 @@
+@namespace("v0.1-example")
+
+/**
+ * Example protocol definition for a fitness or hiking app where you that
+ * allows you to record the start and end of your trip.
+ * Exercise: Add a new file 'waypoint.avdl' that models annotating places
+ * along the way.
+ */
+protocol Trip {
+
+    enum GeomType {
+        Point,
+        Polygon
+    } = Point;
+
+    /** Trip start message. */
+    record TripStart {
+        /** 'trip_start' */
+        string name;
+
+        /** Timestamp in ISO 8601 format, UTC */
+        string timestamp;
+
+        /*  Could also be: Milliseconds since unix epoch, UTC. */
+        /* timestamp_ms timestamp; */
+
+        /** Trip ID, .e.g '06.1.2024'. */
+        string trip_id;
+
+        /** Number of travellers */
+        int num_travellers;
+
+        /** Location where you started. geoJSON geometry type. Typically a
+         *  Point but could also be a Polygon. */
+        GeomType type;
+
+        /** geoJSON geometry coordinates, 1 element for Point, at least 4
+         * points for Polygon. */
+        array<array<double>> coordinates;
+    }
+
+    /** Trip end message. */
+    record TripEnd {
+        /** 'trip_end' */
+        string name;
+
+        /** Timestamp in ISO 8601 format, UTC */
+        string timestamp;
+
+        /** Trial ID, .e.g '06.1.2024'. */
+        string trip_id;
+    }
+}

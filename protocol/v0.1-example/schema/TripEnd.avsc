@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "TripEnd",
+  "namespace" : "v0.1-example",
+  "doc" : "Trip end message.",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "'trip_end'"
+  }, {
+    "name" : "timestamp",
+    "type" : "string",
+    "doc" : "Timestamp in ISO 8601 format, UTC"
+  }, {
+    "name" : "trip_id",
+    "type" : "string",
+    "doc" : "Trial ID, .e.g '06.1.2024'."
+  } ]
+}

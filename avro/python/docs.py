@@ -84,7 +84,7 @@ def to_anchor(text: str) -> str:
 def code(text: str, type='') -> str:
     s = f"```{type}\n"
     s += text + "\n"
-    s += "```\n"
+    s += "```\n\n"
     return s
 
 

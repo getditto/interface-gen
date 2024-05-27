@@ -1,11 +1,18 @@
 import os
 from pathlib import Path
 import subprocess
-from avrotize.avrotoproto import convert_avro_to_proto
+from avrotize.avrotoproto import convert_avro_to_proto, json
 
 from docs import Docs
 
 # Main script to generate all the things from the Avro IDL definitions.
+
+
+def namespace(schema_file: Path) -> str | None:
+    """ Extract namespace from Avro schema file. """
+    with open(schema_file, "r") as f:
+        obj = json.load(f)
+        return obj.get("namespace", None)
 
 
 class Schemas:
@@ -54,6 +61,15 @@ class Schemas:
             proto_dir = pp.parent.parent / "proto3"
             print(f"--> Generating proto3 for {schema_file.stem} in {proto_dir}")
             convert_avro_to_proto(schema_file, proto_dir)
+            # workaround: avrotize func. above always names file <namespace>.proto,
+            #  which causes all except the last schema to be overwritten. Rename that
+            #  output file here, until we can fix the avrotize lib.
+            ns = namespace(schema_file)
+            if ns:
+                proto_file = proto_dir / f"{ns}.proto"
+                new_file = proto_dir / f"{schema_file.stem}.proto"
+                print(f"--> Renaming {proto_file} to {new_file}")
+                proto_file.rename(new_file)
 
 
 def main():

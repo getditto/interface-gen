@@ -68,7 +68,6 @@ class Schemas:
             if ns:
                 proto_file = proto_dir / f"{ns}.proto"
                 new_file = proto_dir / f"{schema_file.stem}.proto"
-                print(f"--> Renaming {proto_file} to {new_file}")
                 proto_file.rename(new_file)
 
 

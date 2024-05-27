@@ -6,7 +6,13 @@ import re
 @dataclass
 class Schema:
     name: str
-    path: PurePath
+    path: Path
+
+    def raw_proto3(self) -> str:
+        proto3_dir = self.path.parent.parent / "proto3"
+        proto3_file = proto3_dir / f"{self.name}.proto"
+        with proto3_file.open("r") as f:
+            return f.read()
 
 
 @dataclass
@@ -57,6 +63,10 @@ def h3(title: str) -> str:
     return f"### {title}\n\n"
 
 
+def h4(title: str) -> str:
+    return f"#### {title}\n\n"
+
+
 def list_item(text: str, indent=0) -> str:
     indent = ' ' * (2*indent)
     return f'{indent}- {text}\n'
@@ -67,6 +77,7 @@ def link(text: str, url: str) -> str:
 
 
 def to_anchor(text: str) -> str:
+    text = text.replace("(", "").replace(")", "")
     return "#" + text.lower().replace(" ", "-")
 
 
@@ -120,21 +131,39 @@ class Docs:
         for ver in self.versions:
             ver_path = output_dir / f"version-{ver.version}.md"
             body = ""
+            protoc_body = ""
             with ver_path.open("w") as f:
                 f.write(h1(f"Interface Specification Version {ver.version}"))
                 f.write(h2("Overview"))
+                f.write("Table of schemas, grouped by protocol:\n\n")
                 for proto in ver.protocols:
-                    sum = f"{link(proto.name, to_anchor(proto.name))} includes schemas:"
-                    f.write(list_item(sum))
+                    href = link(proto.name + " (Avro IDL)", to_anchor(proto.name))
+                    p3_section = proto.name + " (proto3)"
+                    p3_href = link("protobuf", to_anchor(p3_section))
+                    f.write(list_item(f"{href} (see also {p3_href}):"))
+
+                    body += h3(proto.name)
+                    body += f"See also the {p3_href}\n\n"
+                    protoc_body += h3(p3_section)
+
+                    # Print table of contents by protocol
                     for schema in proto.schemas:
                         spath = Path(proto_url_path) / f"v{ver.version}"
                         spath = spath / "schema" / schema.path.name
-                        f.write(list_item(link(schema.name, str(spath)), indent=1))
-                    body += h3(proto.name)
+                        li = list_item(link(schema.name, str(spath)), indent=1)
+                        f.write(li)
+
+                        p3_name = schema.name + " (proto3)"
+                        protoc_body += h4(p3_name)
+                        protoc_body += code(schema.raw_proto3(), type='protobuf')
+
                     body += code(proto.raw_text(), type='avdl')
 
                 f.write(h2("Protocols"))
                 f.write(body)
+
+                f.write(h2("Proto3 Definitions"))
+                f.write(protoc_body)
 
     def generate_markdown(self, output_dir: Path):
         self.generate_index(output_dir)

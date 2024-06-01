@@ -86,17 +86,16 @@ protocol Hello {
 }
 ```
 
-2. Run the schema generation tool to create the JSON-style Avro Schems files
+2. Run the schema generation tool to create the target schema files (.avsc, .proto, etc.)
 for each type. *** Note, you'll need to run
 [install-toolchain.sh](./install-toolchain.sh) to install Avro tools locally
-before running the following command. ***
+before running the generation scripts. ***
 
-```
-avro/bin/avro-idl.sh protocol/v2.3/hello.avsc protocol/v2.3/schema
-```
+Instructions are in [avro/python/README.md](avro/python/README.md).
 
 This should create two new files, `protocol/v2.3/schema/HelloRequest.avsc` and
-`protocol/v2.3/schema/HelloResponse.avsc`.
+`protocol/v2.3/schema/HelloResponse.avsc`, as well as any other generated
+definitions (e.g. `protocol/v2.3/proto3`).
 
 3. Add example data and add a validation step to the python unit tests. Create
 two new files `HelloRequest.json` and `HelloResponse.json` in the
@@ -111,11 +110,8 @@ branch and submit a pull request to get them merged into the repository.
 
 ### Generating Protobuf Definitions (proto3)
 
-Follow the directions in [avro/python/README.md](avro/python/README.md) to install dependencies, then run:
-
-```
-python3 avro/python/generate.py
-```
+Protobuf definitions are automatically generated when you run the generation
+script described above and in [avro/python/README.md](avro/python/README.md).
 
 *Note: you can modify the `main()` function in generate.py to customize its behavior.*
 

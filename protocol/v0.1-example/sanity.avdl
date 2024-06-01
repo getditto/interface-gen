@@ -1,0 +1,11 @@
+@namespace("v0.1-example")
+protocol Sanity {
+
+    record Sanity {
+        string name;
+        int count;
+        float realnum;
+        array<string> cities;
+    }
+}
+

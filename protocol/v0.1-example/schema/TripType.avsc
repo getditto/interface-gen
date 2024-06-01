@@ -1,0 +1,7 @@
+{
+  "type" : "enum",
+  "name" : "TripType",
+  "namespace" : "v0.1-example",
+  "symbols" : [ "Hiking", "Biking" ],
+  "default" : "Hiking"
+}

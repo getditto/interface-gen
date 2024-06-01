@@ -2,8 +2,9 @@
     "name": "trip_start",
     "timestamp": "2024-03-08T20:17:39.926Z",
     "trip_id": "05.0.2",
+    "trip_type": "Hiking",
     "num_travellers": 1,
-    "type": "Polygon",
+    "coord_type": "Polygon",
     "coordinates": [ [-122.5234, 37.7322 ], [-122.5102, 37.8934],
         [-122.4234, 37.8120], [-122.4240, 37.7723], [-122.5201, 37.7938] ]
 }

@@ -6,9 +6,14 @@ message TripStart {
   string name = 1;
   string timestamp = 2;
   string trip_id = 3;
-  int32 num_travellers = 4;
-  GeomTypeEnum GeomType = 5;
-  repeated array coordinates = 6;
+  TripTypeEnum TripType = 4;
+  int32 num_travellers = 5;
+  GeomTypeEnum GeomType = 6;
+  repeated array coordinates = 7;
+  enum TripTypeEnum {
+    Hiking = 0;
+    Biking = 1;
+  }
   enum GeomTypeEnum {
     Point = 0;
     Polygon = 1;

@@ -8,6 +8,11 @@
  */
 protocol Trip {
 
+    enum TripType {
+        Hiking,
+        Biking
+    } = Hiking;
+
     enum GeomType {
         Point,
         Polygon
@@ -27,12 +32,15 @@ protocol Trip {
         /** Trip ID, .e.g '06.1.2024'. */
         string trip_id;
 
+        /** Hiking or biking? */
+        TripType trip_type;
+
         /** Number of travellers */
         int num_travellers;
 
         /** Location where you started. geoJSON geometry type. Typically a
          *  Point but could also be a Polygon. */
-        GeomType type;
+        GeomType coord_type;
 
         /** geoJSON geometry coordinates, 1 element for Point, at least 4
          * points for Polygon. */

@@ -65,7 +65,7 @@ class TestProtocol(unittest.TestCase):
         fastavro_validate(data, schema)
 
     def test_sanity(self):
-        protocol = Protocol("sanity", "0.1-example")
+        protocol = Protocol("Sanity", "0.1-example")
         protocol.validate()
 
     def test_protocol(self):

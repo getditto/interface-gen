@@ -75,7 +75,7 @@ protocol Trip {
         /** Timestamp in ISO 8601 format, UTC */
         string timestamp;
 
-        /** Trial ID, .e.g '06.1.2024'. */
+        /** Trip ID, .e.g '06.1.2024'. */
         string trip_id;
     }
 }

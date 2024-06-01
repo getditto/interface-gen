@@ -14,6 +14,6 @@
   }, {
     "name" : "trip_id",
     "type" : "string",
-    "doc" : "Trial ID, .e.g '06.1.2024'."
+    "doc" : "Trip ID, .e.g '06.1.2024'."
   } ]
 }

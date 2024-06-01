@@ -1,0 +1,21 @@
+{
+  "type" : "record",
+  "name" : "Sanity",
+  "namespace" : "v0.1-example",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string"
+  }, {
+    "name" : "count",
+    "type" : "int"
+  }, {
+    "name" : "realnum",
+    "type" : "float"
+  }, {
+    "name" : "cities",
+    "type" : {
+      "type" : "array",
+      "items" : "string"
+    }
+  } ]
+}

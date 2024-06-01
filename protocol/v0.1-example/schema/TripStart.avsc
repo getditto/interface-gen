@@ -16,11 +16,20 @@
     "type" : "string",
     "doc" : "Trip ID, .e.g '06.1.2024'."
   }, {
+    "name" : "trip_type",
+    "type" : {
+      "type" : "enum",
+      "name" : "TripType",
+      "symbols" : [ "Hiking", "Biking" ],
+      "default" : "Hiking"
+    },
+    "doc" : "Hiking or biking?"
+  }, {
     "name" : "num_travellers",
     "type" : "int",
     "doc" : "Number of travellers"
   }, {
-    "name" : "type",
+    "name" : "coord_type",
     "type" : {
       "type" : "enum",
       "name" : "GeomType",

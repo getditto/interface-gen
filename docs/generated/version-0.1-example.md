@@ -3,9 +3,12 @@
 ## Overview
 
 - [trip](#trip) includes schemas:
+  - [TripType](/protocol/v0.1-example/schema/TripType.avsc)
   - [GeomType](/protocol/v0.1-example/schema/GeomType.avsc)
   - [TripStart](/protocol/v0.1-example/schema/TripStart.avsc)
   - [TripEnd](/protocol/v0.1-example/schema/TripEnd.avsc)
+- [sanity](#sanity) includes schemas:
+  - [Sanity](/protocol/v0.1-example/schema/Sanity.avsc)
 ## Protocols
 
 ### trip
@@ -20,6 +23,11 @@
  * along the way.
  */
 protocol Trip {
+
+    enum TripType {
+        Hiking,
+        Biking
+    } = Hiking;
 
     enum GeomType {
         Point,
@@ -40,12 +48,15 @@ protocol Trip {
         /** Trip ID, .e.g '06.1.2024'. */
         string trip_id;
 
+        /** Hiking or biking? */
+        TripType trip_type;
+
         /** Number of travellers */
         int num_travellers;
 
         /** Location where you started. geoJSON geometry type. Typically a
          *  Point but could also be a Polygon. */
-        GeomType type;
+        GeomType coord_type;
 
         /** geoJSON geometry coordinates, 1 element for Point, at least 4
          * points for Polygon. */
@@ -64,5 +75,21 @@ protocol Trip {
         string trip_id;
     }
 }
+
+```
+### sanity
+
+```avdl
+@namespace("v0.1-example")
+protocol Sanity {
+
+    record Sanity {
+        string name;
+        int count;
+        float realnum;
+        array<string> cities;
+    }
+}
+
 
 ```

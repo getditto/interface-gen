@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package v0.1-example;
+
+message TripEnd {
+  string name = 1;
+  string timestamp = 2;
+  string trip_id = 3;
+}

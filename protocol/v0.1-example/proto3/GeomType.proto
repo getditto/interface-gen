@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package v0.1-example;
+
+enum GeomType {
+  Point = 0;
+  Polygon = 1;
+}
+

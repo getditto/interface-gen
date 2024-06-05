@@ -19,6 +19,9 @@ classifiers = [
 Homepage = "https://github.com/getditto/interface-gen"
 Issues = "https://github.com/getditto/interface-gen/issues"
 
+[project.scripts]
+ifgen = "interface_gen.generate:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

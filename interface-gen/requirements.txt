@@ -14,6 +14,7 @@ fastavro==1.9.4
 flake8==7.0.0
 idna==3.7
 ijson==3.2.3
+install-jdk==1.1.0
 jsoncomparison==1.1.0
 jsonpath-ng==1.6.1
 jsonpointer==2.4

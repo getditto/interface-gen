@@ -5,6 +5,7 @@ import subprocess
 from avrotize.avrotoproto import convert_avro_to_proto, json
 
 from docs import Docs
+import toolchain
 
 # Main script to generate all the things from the Avro IDL definitions.
 
@@ -94,7 +95,13 @@ Finally, it will generate markdown documentation at in the docs directory (-d).
                         help="Path where your version subdirs with Avro IDL files live")
     parser.add_argument('-d', '--docs-dir',
                         help="Path where to generate markdown docs")
+    parser.add_argument('-i', '--install-toolchain',
+                        help="Install toolchain dependencies if needed.",
+                        action="store_true")
     args = parser.parse_args()
+
+    if args.install_toolchain:
+        toolchain.install()
 
     print("--> Generating Avro schemas..")
     schemas = Schemas(args.protocol_dir).from_avro_idl()

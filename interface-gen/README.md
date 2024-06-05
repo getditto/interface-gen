@@ -1,8 +1,10 @@
 # Avro Tools for Python
 
-As documented in the [Apache Avro
-docs](https://avro.apache.org/docs/1.11.1/getting-started-python/), this folder
-contains python scripts for working with Avro files.
+This folder contains python scripts for working with Avro IDL definitions, and generating code, schemas, and documentation from them.
+
+These scripts utilize
+[Apache Avro](https://avro.apache.org/docs/1.11.1/getting-started-python/)
+and [avrotize](https://github.com/clemensv/avrotize).
 
 ## Installation
 
@@ -29,8 +31,35 @@ trouble. We just need to change type annotation syntax a bit.
 From the root of the repository, run:
 
 ```
-python interface-gen/generate.py
+python interface-gen/generate.py --help
 ```
+
+to see usage information. For example, let's say you have this directory
+structure where you store your protocol definitions:
+
+```
+├── my-protocols
+│   ├── v1.1
+│   |   └── foo.avdl
+│   └── v2.0
+│       └── foo.avdl
+│
+├── docs
+```
+
+Running this command:
+
+```
+python interface-gen/generate.py -i -p my-protocols -d docs
+```
+Will do the following:
+
+- Install any toolchain dependencies, if needed (`-i`)
+- Generate schemas for both versions of `foo.avdl` (avro and protobuf)
+- Generate documentation for the same, placed in `docs/`
+
+
+## Running Tests
 
 To run tests,
 

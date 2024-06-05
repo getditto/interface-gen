@@ -87,9 +87,7 @@ protocol Hello {
 ```
 
 2. Run the schema generation tool to create the target schema files (.avsc, .proto, etc.)
-for each type. *** Note, you'll need to run
-[install-toolchain.sh](./install-toolchain.sh) to install Avro tools locally
-before running the generation scripts. ***
+for each type.
 
 Instructions are in [interface-gen/README.md](interface-gen/README.md).
 
@@ -102,11 +100,8 @@ two new files `HelloRequest.json` and `HelloResponse.json` in the
 `example_data/v2.3/` folder, each containing example data which matches the
 defined format.
 
- Next, modify the unit test in `interface-gen/protocols.py` to include a
+ Next, modify the unit test in `interface-gen/protocols_test.py` to include a
  validation test of the two new schemas and example data files.
-
-4. Commit the new `.avdl` and example data `.json` files to a newly-created Git
-branch and submit a pull request to get them merged into the repository.
 
 ### Generating Protobuf Definitions (proto3)
 

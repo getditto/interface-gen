@@ -13,6 +13,7 @@ __pycache__
 dist/
 
 # python virtualenv
-venv/
+*/venv/
+
 # don't check in generated script
 avro/bin/avro-idl.sh

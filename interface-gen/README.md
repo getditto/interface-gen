@@ -12,7 +12,7 @@ the local folder using a python virtual environment (venv), to avoid changing yo
 system's global python packages:
 
 ```
-cd avro/python
+cd interface-gen
 python -m venv venv                             # create a local virtual env.
 source venv/bin/activate                        # activate the virtual env.
 python -m pip intstall -r requirements.txt      # install dependencies, e.g. avro, etc
@@ -29,12 +29,12 @@ trouble. We just need to change type annotation syntax a bit.
 From the root of the repository, run:
 
 ```
-python avro/python/generate.py
+python interface-gen/generate.py
 ```
 
 To run tests,
 
 ```
-cd avro/python
+cd interface-gen
 python -m unittest *test.py
 ```

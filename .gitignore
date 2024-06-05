@@ -11,3 +11,5 @@ __pycache__
 *.jar
 *.tar.gz
 
+# don't check in generated script
+avro/bin/avro-idl.sh

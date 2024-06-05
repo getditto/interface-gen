@@ -10,7 +10,7 @@ import unittest
 
 def schema_filename(name: str, version: str) -> str:
     script_dir = os.path.dirname(__file__)
-    path = os.path.join(script_dir, "..", "..", "protocol", f"v{version}",
+    path = os.path.join(script_dir, "..", "protocol", f"v{version}",
                         "schema", f"{name}.avsc")
     return os.path.abspath(path)
 
@@ -26,7 +26,7 @@ class Protocol:
 
     def example_data_filename(self, extension="json") -> str:
         script_dir = os.path.dirname(__file__)
-        path = os.path.join(script_dir, "..", "..", "example_data")
+        path = os.path.join(script_dir, "..", "example_data")
         path = os.path.join(path, f"v{self.version}", f"{self.schema_name}.{extension}")
         return os.path.abspath(path)
 

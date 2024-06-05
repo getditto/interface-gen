@@ -100,15 +100,19 @@ two new files `HelloRequest.json` and `HelloResponse.json` in the
 `example_data/v2.3/` folder, each containing example data which matches the
 defined format.
 
- Next, modify the unit test in `interface-gen/protocols_test.py` to include a
+ Next, modify the unit test in `protocols_test.py` to include a
  validation test of the two new schemas and example data files.
 
 ### Generating Protobuf Definitions (proto3)
 
 Protobuf definitions are automatically generated when you run the generation
-script described above and in [interface-gen/README.md](interface-gen/README.md).
+script described above.
 
 *Note: you can modify the `main()` function in generate.py to customize its behavior.*
 
 This script creates a separate directory `proto3`, adjacent to the `schema`
 directory, which contains proto3 definitions for protobuf.
+
+### Publishing this Package
+
+See [publish.md](publish.md) for instructions on how to publish this package to PyPi.

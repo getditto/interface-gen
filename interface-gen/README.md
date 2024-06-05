@@ -14,7 +14,6 @@ the local folder using a python virtual environment (venv), to avoid changing yo
 system's global python packages:
 
 ```
-cd interface-gen
 python -m venv venv                             # create a local virtual env.
 source venv/bin/activate                        # activate the virtual env.
 python -m pip intstall -r requirements.txt      # install dependencies, e.g. avro, etc

@@ -1,6 +1,6 @@
 [project]
 name = "interface-gen"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
   { name="Aaron Fabbri", email="aaron.fabbri@ditto.live" },
 ]
@@ -14,6 +14,7 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
     "Topic :: File Formats",
 ]
+dynamic = ["dependencies"]
 
 [project.urls]
 Homepage = "https://github.com/getditto/interface-gen"
@@ -23,7 +24,7 @@ Issues = "https://github.com/getditto/interface-gen/issues"
 ifgen = "interface_gen.generate:main"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-requirements-txt"]
 build-backend = "hatchling.build"
 
 [tool.hatch.metadata.hooks.requirements_txt]
@@ -31,12 +32,13 @@ files = ["requirements.txt"]
 
 [tool.hatch.build.targets.wheel]
 include = [
-  "/avro",
+  "/interface-gen",
   "/docs",
   "/example_data",
-  "install-toolchain.sh",
   "LICENSE",
-  "/protocol",
+  "requirements.txt",
   "README.md",
+  "dist-readme.md",
+  "/protocol"
 ]
 #exclude = [ ]

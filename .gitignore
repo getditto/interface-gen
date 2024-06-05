@@ -10,4 +10,9 @@ __pycache__
 # Package Files #
 *.jar
 *.tar.gz
+dist/
 
+# python virtualenv
+venv/
+# don't check in generated script
+avro/bin/avro-idl.sh

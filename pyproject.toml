@@ -1,0 +1,39 @@
+[project]
+name = "interface-gen"
+version = "0.0.3"
+authors = [
+  { name="Aaron Fabbri", email="aaron.fabbri@ditto.live" },
+]
+description = "Define data format schemas once and generate code for multiple languages and serialization frameworks."
+readme = "dist-readme.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: File Formats",
+]
+
+[project.urls]
+Homepage = "https://github.com/getditto/interface-gen"
+Issues = "https://github.com/getditto/interface-gen/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata.hooks.requirements_txt]
+files = ["requirements.txt"]
+
+[tool.hatch.build.targets.wheel]
+include = [
+  "/avro",
+  "/docs",
+  "/example_data",
+  "install-toolchain.sh",
+  "LICENSE",
+  "/protocol",
+  "README.md",
+]
+#exclude = [ ]

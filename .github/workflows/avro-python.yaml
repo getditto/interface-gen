@@ -16,13 +16,13 @@ jobs:
       - name: flake8 Lint
         uses: py-actions/flake8@v2
         with:
-          path: "avro/python"
+          path: "interface-gen"
           max-line-length: 100
   unit-tests:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: avro/python
+        working-directory: interface-gen
     name: Unit Tests
     strategy:
       matrix:

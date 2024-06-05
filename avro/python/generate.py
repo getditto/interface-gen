@@ -1,3 +1,4 @@
+import argparse
 import os
 from pathlib import Path
 import subprocess
@@ -20,15 +21,18 @@ class Schemas:
         builder-style API (methods that return reference to self to allow
         chaining calls). """
 
-    def __init__(self):
+    def __init__(self, protocol_dir: str | None = None):
         self.schemas: list[Path] = []
-        # path to root of project
-        self.project_root: Path = Path(__file__).parent.parent.parent
+        # path to root of protocol directory
+        if protocol_dir:
+            self.proto_dir = Path(protocol_dir)
+        else:
+            self.proto_dir = Path(__file__).parent.parent.parent / "protocol"
 
     # --> Buider methods
 
     def with_version(self, version: str) -> 'Schemas':
-        return self.find_in_path(os.path.join(self.project_root, "protocol", f"v{version}"))
+        return self.find_in_path(os.path.join(self.proto_dir, f"v{version}"))
 
     def all(self) -> 'Schemas':
         return self.find_in_path()
@@ -36,9 +40,10 @@ class Schemas:
     def find_in_path(self, path: str | None = None) -> 'Schemas':
         """ Find all Avro schemas in given `path`. If path is None, use
             top-level project default. """
-        if not path:
-            path = os.path.join(self.project_root, "protocol")
-        start_path = Path(path)
+        if path:
+            start_path = Path(path)
+        else:
+            start_path = self.proto_dir
         print(f"--> Searching for Avro schema files in {start_path}")
         self.schemas = list(start_path.rglob("*.avsc"))
         return self
@@ -46,7 +51,7 @@ class Schemas:
     def from_avro_idl(self) -> 'Schemas':
         """ Generate all schemas from main Avro IDL files, and select all
             schemas for future operations on this object. """
-        protocol_path = self.project_root / "protocol"
+        protocol_path = self.proto_dir
         avdl_files = protocol_path.rglob("*.avdl")
         for avdl in avdl_files:
             print(f"--> Generating schema(s) for {avdl}")
@@ -72,16 +77,37 @@ class Schemas:
 
 
 def main():
+    epilog = """Note:
+Assumes your protocol directory (-p) contains subfolders named 'v<version>'
+where <version> is an arbitrary version string. Within each of these version
+directories, you should have your Avro IDL (.avdl) files.
+
+This script will generate Avro schemas from the IDL files, and then generate
+proto3 definitions, etc..
+
+Finally, it will generate markdown documentation at in the docs directory (-d).
+"""
+    parser = argparse.ArgumentParser(prog="generate.py",
+                                     description="Generate docs and definitions from Avro IDL.",
+                                     epilog=epilog)
+    parser.add_argument('-p', '--protocol-dir',
+                        help="Path where your version subdirs with Avro IDL files live")
+    parser.add_argument('-d', '--docs-dir',
+                        help="Path where to generate markdown docs")
+    args = parser.parse_args()
 
     print("--> Generating Avro schemas..")
-    schemas = Schemas().from_avro_idl()
+    schemas = Schemas(args.protocol_dir).from_avro_idl()
     print(f"--> Found schemas: {schemas.schemas}")
 
     print("--> Generating proto3 definitions for all schemas")
     schemas.gen_proto3()
 
-    docs = Docs(schemas.project_root / "protocol")
-    docs_dir = schemas.project_root / "docs" / "generated"
+    docs = Docs(schemas.proto_dir)
+    if args.docs_dir:
+        docs_dir = Path(args.docs_dir)
+    else:
+        docs_dir = schemas.proto_dir.parent / "docs" / "generated"
     docs_dir.mkdir(parents=True, exist_ok=True)
     print(f"--> Generating markdown docs in {docs_dir}")
     docs.generate_markdown(docs_dir)

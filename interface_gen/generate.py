@@ -49,14 +49,17 @@ class Schemas:
         self.schemas = list(start_path.rglob("*.avsc"))
         return self
 
-    def from_avro_idl(self) -> 'Schemas':
+    def from_avro_idl(self, output_dir: Path) -> 'Schemas':
         """ Generate all schemas from main Avro IDL files, and select all
             schemas for future operations on this object. """
         protocol_path = self.proto_dir
         avdl_files = protocol_path.rglob("*.avdl")
         for avdl in avdl_files:
             print(f"--> Generating schema(s) for {avdl}")
-            subprocess.check_call(["avro/bin/avro-idl.sh", avdl, avdl.parent / "schema"])
+            version_dir = avdl.parent.name
+            sdir = output_dir / version_dir / "schema"
+            script = toolchain.script_dir().parent / "avro" / "bin" / "avro-idl.sh"
+            subprocess.check_call([str(script), str(avdl), str(sdir)])
         return self.all()
 
     # --> Action methods
@@ -83,17 +86,15 @@ Assumes your protocol directory (-p) contains subfolders named 'v<version>'
 where <version> is an arbitrary version string. Within each of these version
 directories, you should have your Avro IDL (.avdl) files.
 
-This script will generate Avro schemas from the IDL files, and then generate
-proto3 definitions, etc..
-
-Finally, it will generate markdown documentation at in the docs directory (-d).
+Output will be written to the output directory (-o): Avro schemas, proto3
+definitions, markdown documentation.
 """
     parser = argparse.ArgumentParser(prog="generate.py",
                                      description="Generate docs and definitions from Avro IDL.",
                                      epilog=epilog)
     parser.add_argument('-p', '--protocol-dir',
                         help="Path w/ Avro IDL files in version subdirs")
-    parser.add_argument('-d', '--docs-dir',
+    parser.add_argument('-o', '--output-dir', required=True,
                         help="Path where to generate markdown docs")
     parser.add_argument('-i', '--install-toolchain',
                         help="Install toolchain dependencies if needed.",
@@ -104,15 +105,15 @@ Finally, it will generate markdown documentation at in the docs directory (-d).
         toolchain.install()
 
     print("--> Generating Avro schemas..")
-    schemas = Schemas(args.protocol_dir).from_avro_idl()
+    schemas = Schemas(args.protocol_dir).from_avro_idl(Path(args.output_dir))
     print(f"--> Found schemas: {schemas.schemas}")
 
     print("--> Generating proto3 definitions for all schemas")
     schemas.gen_proto3()
 
     docgen = docs.Docs(schemas.proto_dir)
-    if args.docs_dir:
-        docs_dir = Path(args.docs_dir)
+    if args.output_dir:
+        docs_dir = Path(args.output_dir)
     else:
         docs_dir = schemas.proto_dir.parent / "docs" / "generated"
     docs_dir.mkdir(parents=True, exist_ok=True)

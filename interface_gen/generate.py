@@ -4,8 +4,8 @@ from pathlib import Path
 import subprocess
 from avrotize.avrotoproto import convert_avro_to_proto, json
 
-import docs
-import toolchain
+from . import docs
+from . import toolchain
 
 # Main script to generate all the things from the Avro IDL definitions.
 

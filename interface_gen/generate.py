@@ -4,7 +4,7 @@ from pathlib import Path
 import subprocess
 from avrotize.avrotoproto import convert_avro_to_proto, json
 
-from docs import Docs
+import docs
 import toolchain
 
 # Main script to generate all the things from the Avro IDL definitions.
@@ -92,7 +92,7 @@ Finally, it will generate markdown documentation at in the docs directory (-d).
                                      description="Generate docs and definitions from Avro IDL.",
                                      epilog=epilog)
     parser.add_argument('-p', '--protocol-dir',
-                        help="Path where your version subdirs with Avro IDL files live")
+                        help="Path w/ Avro IDL files in version subdirs")
     parser.add_argument('-d', '--docs-dir',
                         help="Path where to generate markdown docs")
     parser.add_argument('-i', '--install-toolchain',
@@ -110,14 +110,14 @@ Finally, it will generate markdown documentation at in the docs directory (-d).
     print("--> Generating proto3 definitions for all schemas")
     schemas.gen_proto3()
 
-    docs = Docs(schemas.proto_dir)
+    docgen = docs.Docs(schemas.proto_dir)
     if args.docs_dir:
         docs_dir = Path(args.docs_dir)
     else:
         docs_dir = schemas.proto_dir.parent / "docs" / "generated"
     docs_dir.mkdir(parents=True, exist_ok=True)
     print(f"--> Generating markdown docs in {docs_dir}")
-    docs.generate_markdown(docs_dir)
+    docgen.generate_markdown(docs_dir)
 
 
 if __name__ == "__main__":

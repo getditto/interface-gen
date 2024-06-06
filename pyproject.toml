@@ -1,6 +1,6 @@
 [project]
-name = "interface-gen"
-version = "0.0.4"
+name = "interface_gen"
+version = "0.0.5"
 authors = [
   { name="Aaron Fabbri", email="aaron.fabbri@ditto.live" },
 ]
@@ -32,13 +32,10 @@ files = ["requirements.txt"]
 
 [tool.hatch.build.targets.wheel]
 include = [
-  "/interface-gen",
-  "/docs",
-  "/example_data",
+  "/interface_gen",
   "LICENSE",
   "requirements.txt",
   "README.md",
   "dist-readme.md",
-  "/protocol"
 ]
 #exclude = [ ]

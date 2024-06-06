@@ -61,9 +61,8 @@ java -jar {target_dir}/{avro_jar(AVRO_VERSION)} idl2schemata "$@"
 def install():
     """ Install the toolchain: tools needed for build and code generation. """
     sdir = script_dir()
-    java_dir = sdir.parent / "avro" / "java"
     avro_bin = sdir.parent / "avro" / "bin"
 
     ensure_jre()
-    install_avro_tools(java_dir)
+    install_avro_tools(avro_bin)
     create_avro_script(avro_bin)

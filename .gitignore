@@ -15,5 +15,5 @@ dist/
 **/venv/
 **/venv-publish/
 
-# don't check in generated script
-avro/bin/avro-idl.sh
+# don't check in generated scripts
+avro/bin/

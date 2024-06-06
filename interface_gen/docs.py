@@ -26,14 +26,15 @@ class Protocol:
     type_re = re.compile(r"\s*(?:enum|record)\s+([a-zA-Z0-9_]+)\s*{")
 
     @classmethod
-    def from_avdl(cls, avdl_path: Path) -> 'Protocol':
+    def from_avdl(cls, avdl_path: Path, gen_path: Path) -> 'Protocol':
         _schemas: list[Schema] = []
         with avdl_path.open("r") as f:
             for line in f:
                 match = cls.type_re.match(line)
                 if match:
                     schema_name = match.group(1)
-                    schema_path = avdl_path.parent / "schema" / f"{schema_name}.avsc"
+                    version = avdl_path.parent.name
+                    schema_path = gen_path / version / "schema" / f"{schema_name}.avsc"
                     if not schema_path.exists():
                         print(f"Error: Expected schema file {schema_path} not found")
                     _schemas.append(Schema(schema_name, schema_path))
@@ -92,8 +93,9 @@ class Docs:
     """ Basic documentation generation for Avro IDL types and their
         derivations. """
 
-    def __init__(self, root_path: Path):
-        self.root_path = root_path
+    def __init__(self, input_path: Path, gen_path: Path):
+        self.root_path = input_path  # where source .avdl files live
+        self.gen_path = gen_path    # where generated .avsc files live
         self.versions: list[Version] = []
         self._enumerate()
 
@@ -114,7 +116,7 @@ class Docs:
             avdl_files = vdir.glob("*.avdl")
             protos = []
             for avdl in avdl_files:
-                protocol = Protocol.from_avdl(avdl)
+                protocol = Protocol.from_avdl(avdl, self.gen_path)
                 protos.append(protocol)
             self.versions.append(Version(vname, vdir, protos))
 

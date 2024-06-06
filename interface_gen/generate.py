@@ -22,13 +22,10 @@ class Schemas:
         builder-style API (methods that return reference to self to allow
         chaining calls). """
 
-    def __init__(self, protocol_dir: str | None = None):
+    def __init__(self, protocol_dir: Path | str):
         self.schemas: list[Path] = []
         # path to root of protocol directory
-        if protocol_dir:
-            self.proto_dir = Path(protocol_dir)
-        else:
-            self.proto_dir = Path(__file__).parent.parent.parent / "protocol"
+        self.proto_dir = Path(protocol_dir)
 
     # --> Buider methods
 
@@ -67,16 +64,17 @@ class Schemas:
     def gen_proto3(self):
         for schema_file in self.schemas:
             pp = Path(schema_file)
-            proto_dir = pp.parent.parent / "proto3"
-            print(f"--> Generating proto3 for {schema_file.stem} in {proto_dir}")
-            convert_avro_to_proto(schema_file, proto_dir)
+            pb_dir = pp.parent.parent / "proto3"
+            pb_dir.mkdir(parents=True, exist_ok=True)
+            print(f"--> Generating proto3 for {str(schema_file)} in {pb_dir}")
+            convert_avro_to_proto(schema_file, pb_dir)
             # workaround: avrotize func. above always names file <namespace>.proto,
             #  which causes all except the last schema to be overwritten. Rename that
             #  output file here, until we can fix the avrotize lib.
             ns = namespace(schema_file)
             if ns:
-                proto_file = proto_dir / f"{ns}.proto"
-                new_file = proto_dir / f"{schema_file.stem}.proto"
+                proto_file = pb_dir / f"{ns}.proto"
+                new_file = pb_dir / f"{schema_file.stem}.proto"
                 proto_file.rename(new_file)
 
 
@@ -104,18 +102,25 @@ definitions, markdown documentation.
     if args.install_toolchain:
         toolchain.install()
 
+    if args.protocol_dir:
+        proto_dir = Path(args.protocol_dir)
+    else:
+        proto_dir = Path(__file__).parent.parent.parent / "protocol"
+
+    if args.output_dir:
+        out_dir = Path(args.output_dir)
+    else:
+        out_dir = proto_dir.parent / "generated"
+
     print("--> Generating Avro schemas..")
-    schemas = Schemas(args.protocol_dir).from_avro_idl(Path(args.output_dir))
+    schemas = Schemas(proto_dir).from_avro_idl(out_dir)
     print(f"--> Found schemas: {schemas.schemas}")
 
     print("--> Generating proto3 definitions for all schemas")
     schemas.gen_proto3()
 
-    docgen = docs.Docs(schemas.proto_dir)
-    if args.output_dir:
-        docs_dir = Path(args.output_dir)
-    else:
-        docs_dir = schemas.proto_dir.parent / "docs" / "generated"
+    docgen = docs.Docs(schemas.proto_dir, Path(args.output_dir))
+    docs_dir = out_dir / "docs"
     docs_dir.mkdir(parents=True, exist_ok=True)
     print(f"--> Generating markdown docs in {docs_dir}")
     docgen.generate_markdown(docs_dir)

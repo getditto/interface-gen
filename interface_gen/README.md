@@ -30,7 +30,7 @@ trouble. We just need to change type annotation syntax a bit.
 From the root of the repository, run:
 
 ```
-python interface_gen/generate.py --help
+python -m interface_gen/generate --help
 ```
 
 to see usage information. For example, let's say you have this directory
@@ -49,7 +49,7 @@ structure where you store your protocol definitions:
 Running this command:
 
 ```
-python interface_gen/generate.py -i -p my-protocols -d docs
+python -m interface_gen/generate -i -p my-protocols -d docs
 ```
 Will do the following:
 

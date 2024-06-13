@@ -1,4 +1,3 @@
-avro/python/venv
 __pycache__
 
 # Compiled class file
@@ -13,6 +12,8 @@ __pycache__
 dist/
 
 # python virtualenv
-venv/
-# don't check in generated script
-avro/bin/avro-idl.sh
+**/venv/
+**/venv-publish/
+
+# don't check in generated scripts
+avro/bin/

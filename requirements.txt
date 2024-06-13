@@ -3,7 +3,7 @@ attrs==23.2.0
 avro==1.11.3
 avrotize==1.6.1
 azure-core==1.30.1
-azure-identity==1.16.0
+azure-identity==1.16.1
 azure-kusto-data==4.4.1
 bitstruct==8.19.0
 certifi==2024.2.2
@@ -14,6 +14,7 @@ fastavro==1.9.4
 flake8==7.0.0
 idna==3.7
 ijson==3.2.3
+install-jdk==1.1.0
 jsoncomparison==1.1.0
 jsonpath-ng==1.6.1
 jsonpointer==2.4
@@ -35,7 +36,7 @@ PyJWT==2.8.0
 pyparsing==3.1.2
 python-dateutil==2.9.0.post0
 referencing==0.35.1
-requests==2.31.0
+requests==2.32.0
 rpds-py==0.18.1
 six==1.16.0
 typing_extensions==4.11.0

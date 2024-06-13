@@ -1,6 +1,6 @@
 @namespace("v0.1-example")
 
-/**
+/*
  * Example protocol definition for a fitness or hiking app where you that
  * allows you to record the start and end of your trip.
  * Exercise: Add a new file 'waypoint.avdl' that models annotating places

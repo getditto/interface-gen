@@ -4,7 +4,8 @@ from pathlib import Path
 import subprocess
 from avrotize.avrotoproto import convert_avro_to_proto, json
 
-from docs import Docs
+from . import docs
+from . import toolchain
 
 # Main script to generate all the things from the Avro IDL definitions.
 
@@ -21,13 +22,10 @@ class Schemas:
         builder-style API (methods that return reference to self to allow
         chaining calls). """
 
-    def __init__(self, protocol_dir: str | None = None):
+    def __init__(self, protocol_dir: Path | str):
         self.schemas: list[Path] = []
         # path to root of protocol directory
-        if protocol_dir:
-            self.proto_dir = Path(protocol_dir)
-        else:
-            self.proto_dir = Path(__file__).parent.parent.parent / "protocol"
+        self.proto_dir = Path(protocol_dir)
 
     # --> Buider methods
 
@@ -48,14 +46,17 @@ class Schemas:
         self.schemas = list(start_path.rglob("*.avsc"))
         return self
 
-    def from_avro_idl(self) -> 'Schemas':
+    def from_avro_idl(self, output_dir: Path) -> 'Schemas':
         """ Generate all schemas from main Avro IDL files, and select all
             schemas for future operations on this object. """
         protocol_path = self.proto_dir
         avdl_files = protocol_path.rglob("*.avdl")
         for avdl in avdl_files:
             print(f"--> Generating schema(s) for {avdl}")
-            subprocess.check_call(["avro/bin/avro-idl.sh", avdl, avdl.parent / "schema"])
+            version_dir = avdl.parent.name
+            sdir = output_dir / version_dir / "schema"
+            script = toolchain.script_dir().parent / "avro" / "bin" / "avro-idl.sh"
+            subprocess.check_call([str(script), str(avdl), str(sdir)])
         return self.all()
 
     # --> Action methods
@@ -63,16 +64,17 @@ class Schemas:
     def gen_proto3(self):
         for schema_file in self.schemas:
             pp = Path(schema_file)
-            proto_dir = pp.parent.parent / "proto3"
-            print(f"--> Generating proto3 for {schema_file.stem} in {proto_dir}")
-            convert_avro_to_proto(schema_file, proto_dir)
+            pb_dir = pp.parent.parent / "proto3"
+            pb_dir.mkdir(parents=True, exist_ok=True)
+            print(f"--> Generating proto3 for {str(schema_file)} in {pb_dir}")
+            convert_avro_to_proto(schema_file, pb_dir)
             # workaround: avrotize func. above always names file <namespace>.proto,
             #  which causes all except the last schema to be overwritten. Rename that
             #  output file here, until we can fix the avrotize lib.
             ns = namespace(schema_file)
             if ns:
-                proto_file = proto_dir / f"{ns}.proto"
-                new_file = proto_dir / f"{schema_file.stem}.proto"
+                proto_file = pb_dir / f"{ns}.proto"
+                new_file = pb_dir / f"{schema_file.stem}.proto"
                 proto_file.rename(new_file)
 
 
@@ -82,35 +84,46 @@ Assumes your protocol directory (-p) contains subfolders named 'v<version>'
 where <version> is an arbitrary version string. Within each of these version
 directories, you should have your Avro IDL (.avdl) files.
 
-This script will generate Avro schemas from the IDL files, and then generate
-proto3 definitions, etc..
-
-Finally, it will generate markdown documentation at in the docs directory (-d).
+Output will be written to the output directory (-o): Avro schemas, proto3
+definitions, markdown documentation.
 """
     parser = argparse.ArgumentParser(prog="generate.py",
                                      description="Generate docs and definitions from Avro IDL.",
                                      epilog=epilog)
     parser.add_argument('-p', '--protocol-dir',
-                        help="Path where your version subdirs with Avro IDL files live")
-    parser.add_argument('-d', '--docs-dir',
+                        help="Path w/ Avro IDL files in version subdirs")
+    parser.add_argument('-o', '--output-dir', required=True,
                         help="Path where to generate markdown docs")
+    parser.add_argument('-i', '--install-toolchain',
+                        help="Install toolchain dependencies if needed.",
+                        action="store_true")
     args = parser.parse_args()
 
+    if args.install_toolchain:
+        toolchain.install()
+
+    if args.protocol_dir:
+        proto_dir = Path(args.protocol_dir)
+    else:
+        proto_dir = Path(__file__).parent.parent.parent / "protocol"
+
+    if args.output_dir:
+        out_dir = Path(args.output_dir)
+    else:
+        out_dir = proto_dir.parent / "generated"
+
     print("--> Generating Avro schemas..")
-    schemas = Schemas(args.protocol_dir).from_avro_idl()
+    schemas = Schemas(proto_dir).from_avro_idl(out_dir)
     print(f"--> Found schemas: {schemas.schemas}")
 
     print("--> Generating proto3 definitions for all schemas")
     schemas.gen_proto3()
 
-    docs = Docs(schemas.proto_dir)
-    if args.docs_dir:
-        docs_dir = Path(args.docs_dir)
-    else:
-        docs_dir = schemas.proto_dir.parent / "docs" / "generated"
+    docgen = docs.Docs(schemas.proto_dir, Path(args.output_dir))
+    docs_dir = out_dir / "docs"
     docs_dir.mkdir(parents=True, exist_ok=True)
     print(f"--> Generating markdown docs in {docs_dir}")
-    docs.generate_markdown(docs_dir)
+    docgen.generate_markdown(docs_dir)
 
 
 if __name__ == "__main__":

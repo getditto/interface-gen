@@ -1,6 +1,6 @@
 [project]
 name = "interface_gen"
-version = "0.0.13"
+version = "0.0.18"
 authors = [
   { name="Aaron Fabbri", email="aaron.fabbri@ditto.live" },
 ]

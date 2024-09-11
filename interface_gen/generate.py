@@ -57,7 +57,7 @@ class Schemas:
             sdir = output_dir / version_dir / "schema"
             script = toolchain.script_dir().parent / "avro" / "bin" / "avro-idl.sh"
             subprocess.check_call([str(script), str(avdl), str(sdir)])
-        return self.all()
+        return self.find_in_path(output_dir)
 
     # --> Action methods
 

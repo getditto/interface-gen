@@ -27,10 +27,10 @@ def find_java(root: Path) -> Path | None:
         print(f"Java not found in {str(root)}")
         return None
     print(f"found java: {list(map(lambda p: str(p), java_files))}")
-    java_path = java_files[0]
+    java_path = Path(java_files[0])
     env = java_env(java_path)
     subprocess.check_output([str(java_path), '-version'], env=env)
-    return Path(java_path)
+    return java_path
 
 
 def ensure_jre() -> Path | None:
@@ -42,7 +42,7 @@ def ensure_jre() -> Path | None:
         jre = find_java(jre_dir)
     if jre:
         print(f"(Java is already installed: {jre})")
-        return jre
+        return Path(jre)
 
     print(f"--> Installing OpenJDK 22 in {jre_dir}")
     jdk.install('22', jre=True)

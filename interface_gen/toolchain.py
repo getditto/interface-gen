@@ -30,7 +30,7 @@ def find_java(root: Path) -> Path | None:
     java_path = java_files[0]
     env = java_env(java_path)
     subprocess.check_output([str(java_path), '-version'], env=env)
-    return java_path
+    return Path(java_path)
 
 
 def ensure_jre() -> Path | None:

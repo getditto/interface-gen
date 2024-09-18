@@ -62,7 +62,7 @@ def install_avro_tools(target_dir: Path):
         download_file(url, target_dir)
 
 
-def java_env(java_path: Path) -> list[str]:
+def java_env(java_path: Path) -> dict[str, str]:
     """ Return environment with path, etc. set for java command """
     bin_dir = java_path.parent
     java_home = bin_dir.parent
@@ -73,16 +73,18 @@ def java_env(java_path: Path) -> list[str]:
     env['LD_LIBRARY_PATH'] = str(lib_dir)
     return env
 
+
 # TODO make this file a class that retains toolchain paths, etc. and provides a
 # method to run the command
-def create_avro_cmd(java_path: Path, target_dir: Path) -> (dict[str, str], list[str]):
+def create_avro_cmd(java_path: Path, target_dir: Path) \
+        -> tuple[dict[str, str], list[str]]:
     env = java_env(java_path)
     return (env, [str(java_path), '-jar',
                   f'{target_dir}/{avro_jar(AVRO_VERSION)}',
                   'idl2schemata'])
 
 
-def install() -> (dict[str, str], list[str]):
+def install() -> tuple[dict[str, str], list[str]]:
     """ Install the toolchain and return the command needed to generate
         schemas and code. """
     sdir = script_dir()

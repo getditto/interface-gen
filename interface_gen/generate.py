@@ -46,7 +46,7 @@ class Schemas:
         self.schemas = list(start_path.rglob("*.avsc"))
         return self
 
-    def from_avro_idl(self, output_dir: Path) -> 'Schemas':
+    def from_avro_idl(self, env: dict[str,str], avro_cmd: list[str], output_dir: Path) -> 'Schemas':
         """ Generate all schemas from main Avro IDL files, and select all
             schemas for future operations on this object. """
         protocol_path = self.proto_dir
@@ -55,8 +55,7 @@ class Schemas:
             print(f"--> Generating schema(s) for {avdl}")
             version_dir = avdl.parent.name
             sdir = output_dir / version_dir / "schema"
-            script = toolchain.script_dir().parent / "avro" / "bin" / "avro-idl.sh"
-            subprocess.check_call([str(script), str(avdl), str(sdir)])
+            subprocess.check_call(avro_cmd + [str(avdl), str(sdir)], env=env)
         return self.find_in_path(output_dir)
 
     # --> Action methods
@@ -95,12 +94,11 @@ definitions, markdown documentation.
     parser.add_argument('-o', '--output-dir', required=True,
                         help="Path where to generate markdown docs")
     parser.add_argument('-i', '--install-toolchain',
-                        help="Install toolchain dependencies if needed.",
+                        help="(deprecated: We always try to install toolchain)",
                         action="store_true")
     args = parser.parse_args()
 
-    if args.install_toolchain:
-        toolchain.install()
+    (env, avro_cmd) = toolchain.install()
 
     if args.protocol_dir:
         proto_dir = Path(args.protocol_dir)
@@ -113,7 +111,7 @@ definitions, markdown documentation.
         out_dir = proto_dir.parent / "generated"
 
     print("--> Generating Avro schemas..")
-    schemas = Schemas(proto_dir).from_avro_idl(out_dir)
+    schemas = Schemas(proto_dir).from_avro_idl(env, avro_cmd, out_dir)
     print(f"--> Found schemas: {schemas.schemas}")
 
     print("--> Generating proto3 definitions for all schemas")

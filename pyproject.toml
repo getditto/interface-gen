@@ -4,7 +4,7 @@ version = "0.0.20"
 authors = [{ name = "Aaron Fabbri", email = "aaron.fabbri@ditto.live" }]
 description = "Define data format schemas once and generate code for multiple languages and serialization frameworks."
 readme = "dist-readme.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python :: 3",

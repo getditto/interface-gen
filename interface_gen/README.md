@@ -8,7 +8,7 @@ and [avrotize](https://github.com/clemensv/avrotize).
 
 ## Installation
 
-This folder requires Python version 3.10 or later*. You'll need to install
+This folder requires Python version 3.9 or later*. You'll need to install
 dependencies before running the scripts here. We recommend installing these in
 the local folder using a python virtual environment (venv), to avoid changing your
 system's global python packages:
@@ -22,8 +22,8 @@ python -m pip intstall -r requirements.txt      # install dependencies, e.g. avr
 
 To exit the virtualenv, simply run the command `deactivate` from your shell.
 
-\* Note: The requirement for python >= 3.10 can be relaxed if it causes
-trouble. We just need to change type annotation syntax a bit.
+\* Note: The requirement for python >= 3.9 can be relaxed if you're willing to
+test and debug any issues. \*
 
 ## Generating Schemas & Code, Running Tests
 

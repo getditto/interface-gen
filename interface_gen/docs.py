@@ -110,15 +110,15 @@ class Docs:
 
     def _enumerate(self):
         self.versions: list[Version] = []
-        version_dirs = self.root_path.glob("v*")
+        version_dirs = self.root_path.glob("*")
         for vdir in version_dirs:
-            vname = vdir.name[1:]  # strip leading 'v'
             avdl_files = vdir.glob("*.avdl")
             protos = []
             for avdl in avdl_files:
                 protocol = Protocol.from_avdl(avdl, self.gen_path)
                 protos.append(protocol)
-            self.versions.append(Version(vname, vdir, protos))
+            v = Version(vdir.name, vdir, protos)
+            self.versions.append(v)
 
     def generate_index(self, output_dir: Path):
         index_path = output_dir / "index.md"

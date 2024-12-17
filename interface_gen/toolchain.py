@@ -4,7 +4,7 @@ from pathlib import Path
 import subprocess
 import shutil
 
-AVRO_VERSION = "1.11.3"
+AVRO_VERSION = "1.12.0"
 
 
 def script_dir() -> Path:

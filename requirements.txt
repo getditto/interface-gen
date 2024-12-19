@@ -1,3 +1,4 @@
 avro==1.11.3
 avrotize==2.6.0
 fastavro==1.9.7
+install-jdk==1.1.0

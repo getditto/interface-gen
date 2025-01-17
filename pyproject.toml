@@ -1,6 +1,6 @@
 [project]
 name = "interface_gen"
-version = "0.0.23"
+version = "0.1.0"
 authors = [{ name = "Aaron Fabbri", email = "aaron.fabbri@ditto.live" }]
 description = "Define data format schemas once and generate code for multiple languages and serialization frameworks."
 readme = "dist-readme.md"

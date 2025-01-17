@@ -150,7 +150,7 @@ class Docs:
 
                     # Print table of contents by protocol
                     for schema in proto.schemas:
-                        spath = Path(proto_url_path) / f"v{ver.version}"
+                        spath = Path(proto_url_path) / f"{ver.version}"
                         spath = spath / "schema" / schema.path.name
                         li = list_item(link(schema.name, str(spath)), indent=1)
                         f.write(li)

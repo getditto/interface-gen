@@ -126,6 +126,7 @@ class Docs:
             f.write(h1("Interface Specification Versions"))
             for ver in self.versions:
                 f.write(list_item(link(ver.version, f"version-{ver.version}.md")))
+            f.write("\n")
 
     def generate_versions(self, output_dir: Path, proto_url_path: str, want_protobuf: bool):
         if want_protobuf:
@@ -139,7 +140,7 @@ class Docs:
             body = ""
             protoc_body = ""
             with ver_path.open("w") as f:
-                f.write(h1(f"Interface Specification Version {ver.version}"))
+                f.write(h1(f"Interface Specification for {ver.version}"))
                 f.write(h2("Overview"))
                 f.write("Table of schemas, grouped by protocol:\n\n")
                 for proto in ver.protocols:
@@ -147,7 +148,7 @@ class Docs:
                     if want_protobuf:
                         p3_section = proto.name + " (proto3)"
                         p3_href = link("protobuf", to_anchor(p3_section))
-                        f.write(list_item(f"{href} (see also {p3_href}):"))
+                        f.write(list_item(f"{href} (see also {p3_href}):\n"))
 
                         body += h3(proto.name)
                         body += f"See also the {p3_href}\n\n"
@@ -162,15 +163,18 @@ class Docs:
 
                         if want_protobuf:
                             p3_name = schema.name + " (proto3)"
+                            protoc_body += "\n"
                             protoc_body += h4(p3_name)
                             protoc_body += code(schema.raw_proto3(), type='protobuf')
 
                     body += code(proto.raw_text(), type='avdl')
 
+                f.write("\n")
                 f.write(h2("Protocols"))
                 f.write(body)
 
                 if want_protobuf:
+                    f.write("\n")
                     f.write(h2("Proto3 Definitions"))
                     f.write(protoc_body)
 

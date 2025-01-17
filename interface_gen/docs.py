@@ -127,7 +127,11 @@ class Docs:
             for ver in self.versions:
                 f.write(list_item(link(ver.version, f"version-{ver.version}.md")))
 
-    def generate_versions(self, output_dir: Path, proto_url_path: str):
+    def generate_versions(self, output_dir: Path, proto_url_path: str, want_protobuf: bool):
+        if want_protobuf:
+            print("** Including protobuf definitions **")
+        else:
+            print("** Skipping protobuf definitions **")
         # loop through versions, writing the table of contents while building
         # up the body of the document
         for ver in self.versions:
@@ -140,13 +144,14 @@ class Docs:
                 f.write("Table of schemas, grouped by protocol:\n\n")
                 for proto in ver.protocols:
                     href = link(proto.name + " (Avro IDL)", to_anchor(proto.name))
-                    p3_section = proto.name + " (proto3)"
-                    p3_href = link("protobuf", to_anchor(p3_section))
-                    f.write(list_item(f"{href} (see also {p3_href}):"))
+                    if want_protobuf:
+                        p3_section = proto.name + " (proto3)"
+                        p3_href = link("protobuf", to_anchor(p3_section))
+                        f.write(list_item(f"{href} (see also {p3_href}):"))
 
-                    body += h3(proto.name)
-                    body += f"See also the {p3_href}\n\n"
-                    protoc_body += h3(p3_section)
+                        body += h3(proto.name)
+                        body += f"See also the {p3_href}\n\n"
+                        protoc_body += h3(p3_section)
 
                     # Print table of contents by protocol
                     for schema in proto.schemas:
@@ -155,18 +160,20 @@ class Docs:
                         li = list_item(link(schema.name, str(spath)), indent=1)
                         f.write(li)
 
-                        p3_name = schema.name + " (proto3)"
-                        protoc_body += h4(p3_name)
-                        protoc_body += code(schema.raw_proto3(), type='protobuf')
+                        if want_protobuf:
+                            p3_name = schema.name + " (proto3)"
+                            protoc_body += h4(p3_name)
+                            protoc_body += code(schema.raw_proto3(), type='protobuf')
 
                     body += code(proto.raw_text(), type='avdl')
 
                 f.write(h2("Protocols"))
                 f.write(body)
 
-                f.write(h2("Proto3 Definitions"))
-                f.write(protoc_body)
+                if want_protobuf:
+                    f.write(h2("Proto3 Definitions"))
+                    f.write(protoc_body)
 
-    def generate_markdown(self, output_dir: Path):
+    def generate_markdown(self, output_dir: Path, want_protobuf=False):
         self.generate_index(output_dir)
-        self.generate_versions(output_dir, "/protocol")
+        self.generate_versions(output_dir, "/protocol", want_protobuf)
